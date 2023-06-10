@@ -1,0 +1,79 @@
+<html>
+
+<head>
+    <title>Flying Dots</title>
+    <script src="dots.js"></script>
+    <style>
+        .main-container {
+            width: 100%;
+            height: 100vh;
+            background-color: rgb(203, 197, 197);
+            box-shadow: 2px 2px 5px gray;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="main-container">
+
+    </div>
+    <script>
+
+        (() => {
+
+            /**
+             * Main code
+             * Board Launch
+             * 
+             */
+            const start = () => {
+
+                console.log('started ' + (new Date()).toISOString);
+                var board = new Board();
+
+                board.installCanvasOn('.main-container');
+
+                for (var i = 0; i < 40; i++) {
+                    board.addRandomDot();
+                }
+
+                setInterval(function () {
+
+                    var attractDistance = parseInt(board.canvas.width / 8);
+                    board.clearCanvas();
+                    for (var index = 0; index < board.dots.length; index++) {
+
+                        let dot = board.dots[index];
+                        for(var j = index + 1; j < board.dots.length; j++) {
+                            var other = board.dots[j];
+
+                            if (dot.distanceTo(other) < attractDistance) {
+                                let opacity = Math.abs( 1 - (dot.distanceTo(other) / attractDistance));
+                                // dot.accelerate(2);
+                                // other.accelerate(2);
+                                board.drawLine(other, dot, opacity);
+                            } else {
+                                // board.dots[index].accelerate(1);
+                            }
+                        }
+                    }
+
+                    board.dots.map((dot) => {
+                        board.drawCircle(dot);
+                        dot.increment();
+                    });
+
+
+                }, 10);
+
+
+                console.log('finished');
+            };
+
+            start();
+
+        })();
+    </script>
+</body>
+
+</html>
